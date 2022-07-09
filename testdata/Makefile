@@ -1,18 +1,22 @@
 FILES:=$(wildcard out/*.go)
 
 .PHONY: check
-check: errcheck $(FILES:.go=.checked)
+check: errcheck $(FILES:.go=.checked) cleanup
 
 out/%.checked: out/%.go
 	errcheck $<
 	go vet --all $<
 	# go vet --shadow $<
 	# golint $<
-	git status
+	# git status
 
+cleanup:
+	git checkout out
 $(GOPATH)/bin/go-bindata: $(wildcard ../*.go) $(wildcard ../**/*.go)
 	go install ../cmd/go-bindata
 
+out: 
+	mkdir out
 out/compress-memcopy.go: 		 $(wildcard in/**/*) $(GOPATH)/bin/go-bindata
 	$(GOPATH)/bin/go-bindata                        -o $@ in/...
 
