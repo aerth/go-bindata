@@ -2,9 +2,9 @@ NAME=go-bindata
 
 ${NAME}: *.go cmd/go-bindata/*.go
 	go build -o ${NAME} -v ./cmd/go-bindata
+	@file ${NAME}
 	@sha256sum ${NAME}
 	@ls -l ${NAME}
-	@file ${NAME}
 
 test: ${NAME}
 	mkdir -p tmpgo/bin/
@@ -14,4 +14,5 @@ test: ${NAME}
 	rm -rf tmpgo
 	@echo test passed
 
-.PHONY: ${NAME}
+install: ${NAME}
+	install ${NAME} /usr/local/bin/
